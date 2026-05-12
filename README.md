@@ -1,14 +1,13 @@
-# Long-form audio chunking for STT providers 
+# Long-form Audio Chunking for STT Providers
 
 # Quickstart
-Refer to [benchmark](benchmark/README.md) and [pipeline](pipeline/README.md) for further information.
+Refer to [benchmark](benchmark/README.md) and [pipeline](pipeline/README.md) for more information.
 
-Both entry points need a few non-Python dependencies:
+Both entry points require a few non-Python dependencies:
 
 - `ffmpeg` and `ffprobe` on `PATH` for audio normalization, duration probing, and chunk slicing.
 - `uv` for Python dependency management.
-- An STT provider API key before transcribing. The benchmark accepts `OPENAI_API_KEY`; the pipeline defaults to `OPENAI_API_KEY` for `avalon-1.5`.
-
+- An STT provider API key before transcribing. The benchmark accepts `OPENAI_API_KEY`; the pipeline also defaults to `OPENAI_API_KEY` for `avalon-1.5`.
 
 To start the benchmark:
 
@@ -37,7 +36,7 @@ uv run python main.py
 ```
 
 # Motivation
-The motivation for this project originated in an OSS contribution I made some time ago ([PR #1889](https://github.com/cocoindex-io/cocoindex/pull/1889)) to CocoIndex, an AI-native ETL pipeline. My goal was to add STT as a first-class primitive to the core transformation offering, but I got an interesting comment on the issue I raised, specifically on [issue #1828](https://github.com/cocoindex-io/cocoindex/issues/1828#issuecomment-4239022518). In short, it came to my attention that STT model providers generally are subject to a certain set of constraints that were relevant to what I wanted to do. I opted in for an unopinionated API that extended the existing LiteLLM provider for embeddings (reasoning can be found [here](https://github.com/cocoindex-io/cocoindex/pull/1889#issue-4326648116)). In the context of CocoIndex specifically (which is specializing to be a 'context engine for your agents'), it is reasonable to assume that a *useful* STT transformation will generally need to support some type of long-form audio, so I leaned into that idea and decide to extend my work into a proper project.
+The motivation for this project originated in an OSS contribution I made some time ago ([PR #1889](https://github.com/cocoindex-io/cocoindex/pull/1889)) to CocoIndex, an AI-native ETL pipeline. My goal was to add STT as a first-class primitive to the core transformation offering. However, after raising the related issue, I received an interesting comment—specifically, on [issue #1828](https://github.com/cocoindex-io/cocoindex/issues/1828#issuecomment-4239022518). In short, I learned that STT model providers are generally subject to a set of constraints relevant to my goals. I opted for an unopinionated API that extended the existing LiteLLM provider for embeddings (my reasoning is [here](https://github.com/cocoindex-io/cocoindex/pull/1889#issue-4326648116)). Especially in the context of CocoIndex (which aims to be a 'context engine for your agents'), it is reasonable to assume that a *useful* STT transformation generally needs to support some kind of long-form audio. So, I leaned into that idea and decided to extend my work into a proper project.
 
 ---
 
@@ -45,17 +44,17 @@ The motivation for this project originated in an OSS contribution I made some ti
 The project has two main components: `/benchmark` and `/pipeline`.
 
 ### Benchmark
-The goal of the benchmark is to offer a common substrate for investigating different chunking strategies, and the benchmark is extensible to other datasets as well (see [Clanker.md](benchmark/datasets/CLANKER.md) for instructions). Currently, the benchmark supports 3 different corpora (AMI, ICSI and Earnings 22), which represent a good sample of what the the actual pipeline is built around (long-form, professional audio recordings).
+The benchmark is intended to offer a common substrate for investigating different chunking strategies and is extensible to other datasets as well (see [Clanker.md](benchmark/datasets/CLANKER.md) for instructions). Currently, the benchmark supports three different corpora (AMI, ICSI, and Earnings22), representing a good sample for the actual pipeline (long-form, professional audio recordings).
 
 ### Pipeline
-The pipeline itself is an amolgamation of the findings from the benchmark (and educated guesses), and supports an 'inteligent' chunking algorithm. It can be extended and can act both as an intermediate step, or the whole processing pipeline itself (CocoIndex offers a myriad of source/target connectors: S3 buckets, Google Drive, databases, etc.). 
+The pipeline itself is an amalgamation of findings from the benchmark (and some educated guesses), and supports an 'intelligent' chunking algorithm. It can be extended and can act as both an intermediate step or as the full processing pipeline (CocoIndex offers many source/target connectors: S3 buckets, Google Drive, databases, etc.).
 
 ##### Why the pipeline (and CocoIndex in the first place)?
-There is a vast number of off-the-shelf meeting transcription/summarization services that work well enough to not justify creating another one. What I find interesting about CocoIndex (and transcription part of the loop) is that it's modular and open source: one *could* use a propriatery service that meets their business needs, but then you're locked to the vendor and their workflows/APIs. With CocoIndex, you could have the STT service run in parallel with workflows that pull data from other sources, like Slack, Google drive, some database, and synthesize insights and fresh context about day-to-day operations (which is really similar to YCs 'company brain' pitch in the recent request for startups). 
+There are a vast number of off-the-shelf meeting transcription/summarization services that work well enough not to justify building another one. What I find interesting about CocoIndex (and the transcription part of the loop) is its modularity and open source nature: you *could* use a proprietary service that meets your business needs, but then you're locked to the vendor and their workflows/APIs. With CocoIndex, the STT service can run in parallel with workflows that pull data from sources like Slack, Google Drive, a database, and synthesize insights and fresh context about daily operations, which closely resembles YC's recent 'company brain' pitch in their latest request for startups.
 
 # Results
 
-End-to-end benchmark (`benchmark.py`): **Aquavoice `avalon-v1.5`**, overlaps merged with LCS stitching. Rows below reflect one **`evaluation/tests`** snapshot on the checked-in layout under `benchmark/data/prepared/benchmark/` (refs vs hyps). **Chunking differs by corpus** for this run: **AMI** and **Earnings22** kept hypotheses from earlier transcription (**300 s** segments, **10 s** overlap, **MP3**); **ICSI** was re-chunked and re-transcribed at **150 s / 10 s overlap / WAV** after provider timeouts on long MP3 uploads.
+End-to-end benchmark (`benchmark.py`), using **Aqua Voice `avalon-v1.5`** and overlaps merged via LCS stitching. The table below shows one **`evaluation/tests`** snapshot on the checked-in data under `benchmark/data/prepared/benchmark/` (refs vs hyps). **Chunking differs by corpus** for this run: **AMI** and **Earnings22** used 300 s segments with 10 s overlap in MP3; **ICSI** was re-chunked and re-transcribed at 150 s / 10 s overlap in WAV after provider timeouts on longer MP3 uploads.
 
 | Dataset | Case | Chunking (length / overlap / format) | WER | Word acc. | Edit distance | Semantic | Interpretation |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
@@ -68,12 +67,12 @@ End-to-end benchmark (`benchmark.py`): **Aquavoice `avalon-v1.5`**, overlaps mer
 | ami | ES2008a | 300 s / 10 s / MP3 | 77.77% | 22.23% | 1963 | 0.316 | Significant semantic difference |
 | ami | ES2008b | 300 s / 10 s / MP3 | 16.98% | 83.02% | 1022 | 0.973 | Very similar meaning |
 
-Reproduce with [benchmark/README.md](benchmark/README.md); use `--resume-transcribe` with `--skip-chunk` when only some corpora need re-transcription.
+You can reproduce these results with [benchmark/README.md](benchmark/README.md); use `--resume-transcribe` with `--skip-chunk` when only some corpora need re-transcription.
 
 # Discussion
-In the spirit of scholarly diligence, I wanted to try as many different chunking strategies as possible. With some experimentation and deliberate thought, it struck me that the domain I wanted to focus on (professional audio) requires agressive/redundant context preservation, which meant that the strategy I want to go for most definitevely should involve some sort of chunking with overlapping, prompting me to produce the following table:
+In the spirit of scholarly diligence, I wanted to try as many different chunking strategies as possible. After some experimentation and deliberate thought, it became clear that the domain I wanted to focus on (professional audio) requires aggressive/redundant context preservation. Therefore, the most appropriate strategy involves some form of chunking with overlaps, prompting me to construct the following table:
 
-**API overhead (%):** extra audio volume across chunking strategies.
+**API overhead (%):** Extra audio volume across chunking strategies.
 
 | Chunk **N** \ Overlap **M** | 5s | 10s | 15s | 20s | 30s |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -83,28 +82,27 @@ In the spirit of scholarly diligence, I wanted to try as many different chunking
 | 15 min (900s) | 1.11% | 2.22% | 3.33% | 4.44% | 6.67% |
 | 18 min (1080s) | 0.93% | 1.85% | 2.78% | 3.70% | 5.56% |
 
-When overlapping **M** seconds on a timeline, each internal boundary is transcribed twice. Compared to sending the same timeline with **no overlap**, the steady-state **extra audio per chunk** relative to chunk length **N** is **(2M/N)×100**.
+When overlapping **M** seconds on a timeline, each internal boundary is transcribed twice. Compared to sending the same timeline with **no overlap**, the steady-state extra audio per chunk relative to chunk length **N** is **(2M/N)×100**.
 
-Now, observing the table above, one can exercise judgement as to what level of overhead is acceptible in a production environment. One tradeoff not obvious from this table is that, depending on the STT provider, transcription accuracy can degrade with longer chunks (context degradation). For my experiments, I found that 10:10 (3.33% overhead) and 15:10 (2.22%) was acceptable and enough to preserve context across the boundary. 
+By examining the table above, you can decide what level of overhead is acceptable in a production environment. One tradeoff not obvious from this table is that, depending on the STT provider, transcription accuracy can degrade as chunks become longer (context degradation). In my experiments, I found that 10:10 (3.33% overhead) and 15:10 (2.22%) were reasonable values for context preservation across boundaries.
 
 ### Deduping transcripts
-One small drawdown of the overlapping chunks strategy is that the resulting transcription will invariably include duplication that cannot be arbitraraly merged. For what appears to be a rare instance where Leetcode provided actual value to software development (joking), I opted for a longest common sequence algorithm to resolve duplications, and for fun, made a small animation (using [Manim](https://github.com/3b1b/manim)) to showcase how it works:
+One minor drawback of the overlapping chunks strategy is that the resulting transcription will inevitably include duplication that cannot always be merged automatically. In a rare instance where Leetcode provided genuine value to software development (joking), I opted for a longest common subsequence algorithm to resolve duplications. For fun, I made a small animation (using [Manim](https://github.com/3b1b/manim)) to show how it works:
 
 ![](assets/AnimationScene.gif)
 
 In principle, what happens is the following:
-1. Slide subsequences of varying length across the adjecent chunks
-2. During iteration, check for *best* alignment (largest # of positional of matches)
-3. Merge them along the middle
-4. Win
+1. Slide subsequences of varying length across the adjacent chunks.
+2. During iteration, check for *best* alignment (the largest number of positional matches).
+3. Merge them around the middle.
 
 
 ### Hybrid chunking strategy
 The default `hybrid` strategy for the pipeline:
 
-1. Checks whether the input can be reused. By default the pipeline writes a
-   normalized 16 kHz mono FLAC; if normalization is disabled and the input is
-   already 16 kHz mono FLAC, it can be reused without transcoding.
+1. Checks whether the input can be reused. By default, the pipeline writes a
+   normalized 16 kHz mono FLAC. If normalization is disabled and the input is
+   already a 16 kHz mono FLAC, it can be reused without transcoding.
 2. Runs Silero VAD over that prepared FLAC. If VAD detects no speech segments,
    the transcript is stored as an empty string and transcription is skipped.
 3. Sends the prepared FLAC directly if it is under 25 MB and shorter than 18
@@ -116,18 +114,7 @@ The default `hybrid` strategy for the pipeline:
 6. Falls back to a 10-minute cut when no suitable silence boundary exists before
    the limit.
 
-
-
 ## Notes
-- You will notice that the benchmark makes no mention of [Silero VAD](https://github.com/snakers4/silero-vad). Due to the corpura metadata format, it was challenging to align transcripts with chunks (and hence evaluate the results), so I didn't benchmark the full strategy used by the pipeline. I opted in to use it because it the pipeline as it provides a form of pre-processing that can make the chunking strategy more informed (chunking at silence boundaries when it makes sense).
+- You will notice that the benchmark makes no mention of [Silero VAD](https://github.com/snakers4/silero-vad). Due to the corpora metadata format, it was challenging to align transcripts with chunks (and hence evaluate the results), so I didn't benchmark the full strategy used by the pipeline. I chose to use it in the pipeline because it provides a form of pre-processing that can make the chunking strategy more informed (chunking at appropriate silence boundaries).
 
-- For both the benchmark and the pipeline, I normalize the audio to 16 kHz mono FLAC, both in the interest of consistency in results and the free lossless compression.
-
-
-
-
-
-
-
-
-
+- For both the benchmark and the pipeline, I normalize the audio to 16 kHz mono FLAC, both for consistency in results and for the benefits of free lossless compression.
