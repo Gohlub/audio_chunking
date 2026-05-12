@@ -8,7 +8,7 @@ Pipeline (one call per case_id):
         -> merge per-part texts (:func:`shared.lib.merge_transcripts.merge_overlapping_texts`)
         -> data/prepared/benchmark/hypotheses/<case_id>.hyp.txt
 
-Use ``--chunk-format wav`` (or ``mp3``) or env ``BENCHMARK_CHUNK_FORMAT`` if the API rejects FLAC or WAV uploads are too large (try ``mp3`` for smaller requests).
+Default chunk format is MP3. Use ``--chunk-format wav`` or ``--chunk-format flac`` (or env ``BENCHMARK_CHUNK_FORMAT``) if your API requires a different codec or you want lossless chunks.
 
 For resume after partial runs, :func:`transcribe_case` accepts ``skip_existing`` (CLI ``--resume-transcribe``), using :func:`datasets.prepare.cases.hypothesis_is_placeholder` on existing ``*.hyp.txt`` files.
 
@@ -130,7 +130,7 @@ class TranscriptionClient:
         raise AssertionError("transcribe_file: unreachable")
 
 
-def _list_chunks(dataset: str, case_id: str, *, chunk_format: str = "flac") -> list[Path]:
+def _list_chunks(dataset: str, case_id: str, *, chunk_format: str = "mp3") -> list[Path]:
     parts = sorted((chunked_audio_dir(dataset) / case_id).glob(chunk_glob(chunk_format)))
     if not parts:
         raise FileNotFoundError(
@@ -146,7 +146,7 @@ def transcribe_case(
     case_id: str,
     *,
     model: str,
-    chunk_format: str = "flac",
+    chunk_format: str = "mp3",
     out_hyp_dir: Path | None = None,
     log: bool = True,
     skip_existing: bool = False,
@@ -204,7 +204,7 @@ def transcribe_dataset(
     case_ids: Sequence[str],
     *,
     model: str = DEFAULT_MODEL,
-    chunk_format: str = "flac",
+    chunk_format: str = "mp3",
     client: TranscriptionClient | None = None,
     out_hyp_dir: Path | None = None,
     log: bool = True,

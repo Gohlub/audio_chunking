@@ -43,8 +43,8 @@ from evaluation.tests import run_all_tests  # noqa: E402
 DEFAULT_CHUNK_SECONDS = 300.0
 DEFAULT_OVERLAP_SECONDS = 10.0
 
-_ENV_CHUNK_FMT = os.environ.get("BENCHMARK_CHUNK_FORMAT", "flac").strip().lower()
-CHUNK_FORMAT_DEFAULT = _ENV_CHUNK_FMT if _ENV_CHUNK_FMT in ("flac", "wav", "mp3") else "flac"
+_ENV_CHUNK_FMT = os.environ.get("BENCHMARK_CHUNK_FORMAT", "mp3").strip().lower()
+CHUNK_FORMAT_DEFAULT = _ENV_CHUNK_FMT if _ENV_CHUNK_FMT in ("flac", "wav", "mp3") else "mp3"
 
 
 def _stage(label: str) -> float:
@@ -106,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         choices=["flac", "wav", "mp3"],
         default=CHUNK_FORMAT_DEFAULT,
         help=(
-            "On-disk chunk codec/extension (default: env BENCHMARK_CHUNK_FORMAT or flac). "
+            "On-disk chunk codec/extension (default: env BENCHMARK_CHUNK_FORMAT or mp3). "
             "wav: PCM for picky APIs; mp3: smaller uploads (env BENCHMARK_CHUNK_MP3_BITRATE, default 128k)."
         ),
     )

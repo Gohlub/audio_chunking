@@ -46,7 +46,7 @@ Prepare **does not** overwrite existing `*.hyp.txt` (only writes the `[placehold
 
 Default chunk length is **300 s** (5 minutes) with **10 s** overlap; override with **`--chunk-seconds`** / **`STT_CHUNK_SECONDS`** and **`--overlap-seconds`** / **`STT_OVERLAP_SECONDS`**.
 
-Chunk files default to **FLAC** (`part*.flac`). Use **`--chunk-format wav`** or **`--chunk-format mp3`**, or env **`BENCHMARK_CHUNK_FORMAT`**, for **WAV** (`part*.wav`) or **MP3** (`part*.mp3`). MP3 uses **128 kb/s** mono at 16 kHz unless you set **`BENCHMARK_CHUNK_MP3_BITRATE`** (e.g. `96k`). Same overlap/length behavior for all formats.
+Chunk files default to **MP3** (`part*.mp3`) for broad API compatibility. Use **`--chunk-format flac`** or **`--chunk-format wav`**, or env **`BENCHMARK_CHUNK_FORMAT`**, for **FLAC** (`part*.flac`) or **WAV** (`part*.wav`). MP3 uses **128 kb/s** mono at 16 kHz unless you set **`BENCHMARK_CHUNK_MP3_BITRATE`** (e.g. `96k`). Same overlap/length behavior for all formats.
 
 Transient **`503`** / timeouts: transcription retries with exponential backoff ( **`BENCHMARK_TRANSCRIBE_MAX_RETRIES`** default `8`, **`BENCHMARK_TRANSCRIBE_RETRY_BASE_S`** default `4`, **`BENCHMARK_TRANSCRIBE_RETRY_CAP_S`** default `120`).
 

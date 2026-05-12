@@ -189,7 +189,7 @@ def chunk_case(
     *,
     chunk_seconds: float,
     overlap_seconds: float,
-    chunk_format: str = "flac",
+    chunk_format: str = "mp3",
     force: bool = False,
 ) -> list[Path]:
     """
@@ -250,7 +250,7 @@ def chunk_dataset(
     *,
     chunk_seconds: float,
     overlap_seconds: float,
-    chunk_format: str = "flac",
+    chunk_format: str = "mp3",
     force: bool = False,
 ) -> dict[str, list[Path]]:
     """Run :func:`chunk_case` for each id; returns ``{case_id: [chunk_paths…]}``."""
