@@ -92,8 +92,8 @@ One small drawdown of the overlapping chunks strategy is that the resulting tran
 
 In principle, what happens is the following:
 1. Slide subsequences of varying length across the adjecent chunks
-2. During iteration, check for alignment (largest # positional of matches)
-3. Merge along the (best) discovered subsequences (along the middle).
+2. During iteration, check for *best* alignment (largest # of positional of matches)
+3. Merge them along the middle
 4. Win
 
 
