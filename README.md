@@ -48,7 +48,7 @@ The project has two main components: `/benchmark` and `/pipeline`.
 The goal of the benchmark is to offer a common substrate for investigating different chunking strategies, and the benchmark is extensible to other datasets as well (see [Clanker.md](benchmark/datasets/CLANKER.md) for instructions). Currently, the benchmark supports 3 different corpora (AMI, ICSI and Earnings 22), which represent a good sample of what the the actual pipeline is built around (long-form, professional audio recordings).
 
 ### Pipeline
-The pipeline itself is an amolgamation of the findings from the benchmark, in the form of an pipeline that inteligently chunks and transforms audio to text, and can act both as an intermediate step, or the whole processing pipeline itself (CocoIndex offers a myriad of source/target connectors: S3 buckets, Google Drive, databases, etc.).
+The pipeline itself is an amolgamation of the findings from the benchmark (and educated guesses), and supports an 'inteligent' chunking algorithm. It can be extended and can act both as an intermediate step, or the whole processing pipeline itself (CocoIndex offers a myriad of source/target connectors: S3 buckets, Google Drive, databases, etc.).
 
 
 # Results
