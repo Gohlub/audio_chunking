@@ -87,7 +87,9 @@ Now, observing the table above, one can exercise judgement as to what level of o
 
 ### Deduping transcripts
 One small drawdown of the overlapping chunks strategy is that the resulting transcription will invariably include duplication that cannot be arbitraraly merged. For what appears to be a rare instance where Leetcode provided actual value to software development (joking), I opted for a longest common sequence algorithm to resolve duplications, and for fun, made a small animation (using [Manim](https://github.com/3b1b/manim)) to showcase how it works:
+
 ![](assets/AnimationScene.gif)
+
 In principle, what happens is the following:
 1. Slide subsequences of varying length across the adjecent chunks
 2. During iteration, check for alignment (largest # positional of matches)
