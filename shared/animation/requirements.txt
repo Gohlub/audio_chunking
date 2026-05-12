@@ -1,0 +1,2 @@
+# Animation only — install into shared/animation/.venv (see README.md here).
+manim>=0.18.0

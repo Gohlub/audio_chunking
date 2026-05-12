@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "stt-shared"
+version = "0.1.0"
+description = "Shared STT helpers (chunking windows, overlap merge, VAD) for benchmark and pipeline."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "silero-vad>=6.2.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shared"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/animation",
+]
