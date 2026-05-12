@@ -1,0 +1,15 @@
+[project]
+name = "pipeline"
+version = "0.1.0"
+description = "Audio-to-text pipeline with CocoIndex"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "asyncpg",
+    "cocoindex",
+    "litellm",
+    "stt-shared",
+]
+
+[tool.uv.sources]
+stt-shared = { path = "../shared", editable = true }
