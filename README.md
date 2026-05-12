@@ -48,8 +48,10 @@ The project has two main components: `/benchmark` and `/pipeline`.
 The goal of the benchmark is to offer a common substrate for investigating different chunking strategies, and the benchmark is extensible to other datasets as well (see [Clanker.md](benchmark/datasets/CLANKER.md) for instructions). Currently, the benchmark supports 3 different corpora (AMI, ICSI and Earnings 22), which represent a good sample of what the the actual pipeline is built around (long-form, professional audio recordings).
 
 ### Pipeline
-The pipeline itself is an amolgamation of the findings from the benchmark (and educated guesses), and supports an 'inteligent' chunking algorithm. It can be extended and can act both as an intermediate step, or the whole processing pipeline itself (CocoIndex offers a myriad of source/target connectors: S3 buckets, Google Drive, databases, etc.).
+The pipeline itself is an amolgamation of the findings from the benchmark (and educated guesses), and supports an 'inteligent' chunking algorithm. It can be extended and can act both as an intermediate step, or the whole processing pipeline itself (CocoIndex offers a myriad of source/target connectors: S3 buckets, Google Drive, databases, etc.). 
 
+##### Why the pipeline (and CocoIndex in the first place)?
+There is a vast number of off-the-shelf meeting transcription/summarization services that work well enough to not justify creating another one. What I find interesting about CocoIndex (and transcription part of the loop) is that it's modular and open source: one *could* use a propriatery service that meets their business needs, but then you're locked to the vendor and their workflows/APIs. With CocoIndex, you could have the STT service run in parallel with workflows that pull data from other sources, like Slack, Google drive, some database, and synthesize insights and fresh context about day-to-day operations (which is really similar to YCs 'company brain' pitch in the recent request for startups). 
 
 # Results
 
