@@ -1,0 +1,19 @@
+[project]
+name = "stt-exploration-scripts"
+version = "0.1.0"
+description = "Script-local environment for STT transcript evaluation."
+requires-python = ">=3.10"
+dependencies = [
+  "sentence-transformers",
+  "scikit-learn",
+  "openai>=1.0.0",
+  "stt-shared",
+]
+
+[tool.uv.sources]
+stt-shared = { path = "../shared", editable = true }
+
+[tool.pyright]
+# Resolve third-party imports (sentence_transformers, sklearn, …) from the project venv.
+venvPath = "."
+venv = ".venv"
