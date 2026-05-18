@@ -57,7 +57,7 @@ There are a vast number of off-the-shelf meeting transcription/summarization ser
 End-to-end benchmark (`benchmark.py`), using **Aqua Voice `avalon-v1.5`** and overlaps merged via LCS stitching. The table below shows one **`evaluation/tests`** snapshot on the checked-in data under `benchmark/data/prepared/benchmark/` (refs vs hyps). **Chunking differs by corpus** for this run: **AMI** and **Earnings22** used 300 s segments with 10 s overlap in MP3; **ICSI** was re-chunked and re-transcribed at 150 s / 10 s overlap in WAV after provider timeouts on longer MP3 uploads.
 
 | Dataset | Case | Chunking (length / overlap / format) | WER | Word acc. | Edit distance | Semantic |
-| --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
 | earnings22 | 4462231 | 300 s / 10 s / MP3 | 18.43% | 81.57% | 1330 | 0.992 | 
 | earnings22 | 4469528 | 300 s / 10 s / MP3 | 22.71% | 77.29% | 844 | 0.883 | 
 | icsi | Bmr001 | 150 s / 10 s / WAV | 40.04% | 59.96% | 2565 | 0.882 | 
