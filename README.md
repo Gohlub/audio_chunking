@@ -56,16 +56,16 @@ There are a vast number of off-the-shelf meeting transcription/summarization ser
 
 End-to-end benchmark (`benchmark.py`), using **Aqua Voice `avalon-v1.5`** and overlaps merged via LCS stitching. The table below shows one **`evaluation/tests`** snapshot on the checked-in data under `benchmark/data/prepared/benchmark/` (refs vs hyps). **Chunking differs by corpus** for this run: **AMI** and **Earnings22** used 300 s segments with 10 s overlap in MP3; **ICSI** was re-chunked and re-transcribed at 150 s / 10 s overlap in WAV after provider timeouts on longer MP3 uploads.
 
-| Dataset | Case | Chunking (length / overlap / format) | WER | Word acc. | Edit distance | Semantic | Interpretation |
+| Dataset | Case | Chunking (length / overlap / format) | WER | Word acc. | Edit distance | Semantic |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
-| earnings22 | 4462231 | 300 s / 10 s / MP3 | 18.43% | 81.57% | 1330 | 0.992 | Very similar meaning |
-| earnings22 | 4469528 | 300 s / 10 s / MP3 | 22.71% | 77.29% | 844 | 0.883 | Mostly similar meaning |
-| icsi | Bmr001 | 150 s / 10 s / WAV | 40.04% | 59.96% | 2565 | 0.882 | Mostly similar meaning |
-| icsi | Bns001 | 150 s / 10 s / WAV | 29.80% | 70.20% | 4516 | 0.600 | Significant semantic difference |
-| icsi | Bro003 | 150 s / 10 s / WAV | 25.50% | 74.50% | 3276 | 0.369 | Significant semantic difference |
-| ami | EN2001a | 300 s / 10 s / MP3 | 18.39% | 81.61% | 2980 | 0.917 | Very similar meaning |
-| ami | ES2008a | 300 s / 10 s / MP3 | 77.77% | 22.23% | 1963 | 0.316 | Significant semantic difference |
-| ami | ES2008b | 300 s / 10 s / MP3 | 16.98% | 83.02% | 1022 | 0.973 | Very similar meaning |
+| earnings22 | 4462231 | 300 s / 10 s / MP3 | 18.43% | 81.57% | 1330 | 0.992 | 
+| earnings22 | 4469528 | 300 s / 10 s / MP3 | 22.71% | 77.29% | 844 | 0.883 | 
+| icsi | Bmr001 | 150 s / 10 s / WAV | 40.04% | 59.96% | 2565 | 0.882 | 
+| icsi | Bns001 | 150 s / 10 s / WAV | 29.80% | 70.20% | 4516 | 0.600 | 
+| icsi | Bro003 | 150 s / 10 s / WAV | 25.50% | 74.50% | 3276 | 0.369 | 
+| ami | EN2001a | 300 s / 10 s / MP3 | 18.39% | 81.61% | 2980 | 0.917 | 
+| ami | ES2008a | 300 s / 10 s / MP3 | 77.77% | 22.23% | 1963 | 0.316 | 
+| ami | ES2008b | 300 s / 10 s / MP3 | 16.98% | 83.02% | 1022 | 0.973 | 
 
 You can reproduce these results with [benchmark/README.md](benchmark/README.md); use `--resume-transcribe` with `--skip-chunk` when only some corpora need re-transcription.
 
@@ -87,14 +87,14 @@ When overlapping **M** seconds on a timeline, each internal boundary is transcri
 By examining the table above, you can decide what level of overhead is acceptable in a production environment. One tradeoff not obvious from this table is that, depending on the STT provider, transcription accuracy can degrade as chunks become longer (context degradation). In my experiments, I found that 10:10 (3.33% overhead) and 15:10 (2.22%) were reasonable values for context preservation across boundaries.
 
 ### Deduping transcripts
-One minor drawback of the overlapping chunks strategy is that the resulting transcription will inevitably include duplication that cannot always be merged automatically. In a rare instance where Leetcode provided genuine value to software development (joking), I opted for a longest common subsequence algorithm to resolve duplications. For fun, I made a small animation (using [Manim](https://github.com/3b1b/manim)) to show how it works:
+One minor drawback of the overlapping chunks strategy is that the resulting transcription will inevitably include duplication. I opted for a longest common subsequence algorithm to resolve duplications. For fun, I made a small animation (using [Manim](https://github.com/3b1b/manim)) to show how it works:
 
 ![](assets/AnimationScene.gif)
 
 In principle, what happens is the following:
 1. Slide subsequences of varying length across the adjacent chunks.
 2. During iteration, check for *best* alignment (the largest number of positional matches).
-3. Merge them around the middle.
+3. Merge them along the middle.
 
 
 ### Hybrid chunking strategy
